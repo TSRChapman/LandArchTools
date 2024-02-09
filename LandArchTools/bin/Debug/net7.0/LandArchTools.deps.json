@@ -1,0 +1,34 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "LandArchTools/1.0": {
+        "dependencies": {
+          "RhinoCommon": "8.0.23164.14305-wip"
+        },
+        "runtime": {
+          "LandArchTools.rhp": {}
+        }
+      },
+      "RhinoCommon/8.0.23164.14305-wip": {}
+    }
+  },
+  "libraries": {
+    "LandArchTools/1.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "RhinoCommon/8.0.23164.14305-wip": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-kTIWpk+jOG6TmNIn/usy3cX9hyAOT3DITL8CFe6QgpCU7H19c0S3Lm/jAHh0xUJb+WdigsgBgQUeloBwHNc+/g==",
+      "path": "rhinocommon/8.0.23164.14305-wip",
+      "hashPath": "rhinocommon.8.0.23164.14305-wip.nupkg.sha512"
+    }
+  }
+}

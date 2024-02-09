@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "dgSpecHash": "7w8U64IkCYex9wrQBd6rQossvkWSMpCl8ZsMn8XLS03izRg6iM9r79l2e69nNbDklwWFF0+QgoC4eva8FpmS1Q==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\tsrch\\OneDrive\\Documents\\RhinoDev\\LandArchTools\\LandArchTools\\LandArchTools.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\tsrch\\.nuget\\packages\\rhinocommon\\8.0.23164.14305-wip\\rhinocommon.8.0.23164.14305-wip.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'RhinoCommon 8.0.23164.14305-wip' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0'. This package may not be fully compatible with your project.",
+      "libraryId": "RhinoCommon",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    }
+  ]
+}
