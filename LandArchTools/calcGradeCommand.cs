@@ -7,12 +7,13 @@ using Rhino.DocObjects;
 using Rhino.Geometry;
 using Rhino.Input;
 using Rhino.Input.Custom;
+using LandArchTools.Utilities;
 
 namespace LandArchTools
 {
-    public class calcGradeCommand : Command
+    public class CalcGradeCommand : Command
     {
-        public calcGradeCommand()
+        public CalcGradeCommand()
         {
             // Rhino only creates one instance of each command class defined in a
             // plug-in, so it is safe to store a refence in a static property.
@@ -20,7 +21,7 @@ namespace LandArchTools
         }
 
         ///<summary>The only instance of this command.</summary>
-        public static calcGradeCommand Instance { get; private set; }
+        public static CalcGradeCommand Instance { get; private set; }
 
         ///<returns>The command name as it appears on the Rhino command line.</returns>
         public override string EnglishName => "calcGrade";
@@ -32,7 +33,7 @@ namespace LandArchTools
 
             try
             {
-                (double scale, bool imperial) = Scaling(doc);
+                (double scale, bool imperial) = scaleHelper.Scaling(doc);
 
                 // Get first point
                 GetPoint gp = new GetPoint();
@@ -201,15 +202,6 @@ namespace LandArchTools
             doc.Views.Redraw();
         }
 
-        private (double, bool) Scaling(RhinoDoc doc)
-        {
-            UnitSystem unitSystem = doc.ModelUnitSystem;
-            bool imperial =
-                unitSystem != UnitSystem.Millimeters
-                && unitSystem != UnitSystem.Centimeters
-                && unitSystem != UnitSystem.Meters;
-            double scale = RhinoMath.UnitScale(unitSystem, UnitSystem.Millimeters);
-            return (scale, imperial);
-        }
+        
     }
 }
