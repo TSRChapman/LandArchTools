@@ -10,3 +10,4 @@ C:\Users\tsrch\OneDrive\Documents\RhinoDev\LandArchTools\LandArchTools\obj\Debug
 C:\Users\tsrch\OneDrive\Documents\RhinoDev\LandArchTools\LandArchTools\obj\Debug\net7.0\refint\LandArchTools.rhp
 C:\Users\tsrch\OneDrive\Documents\RhinoDev\LandArchTools\LandArchTools\obj\Debug\net7.0\LandArchTools.pdb
 C:\Users\tsrch\OneDrive\Documents\RhinoDev\LandArchTools\LandArchTools\obj\Debug\net7.0\ref\LandArchTools.rhp
+C:\Users\tsrch\OneDrive\Documents\RhinoDev\LandArchTools\LandArchTools\obj\Debug\net7.0\LandArchTools.sourcelink.json

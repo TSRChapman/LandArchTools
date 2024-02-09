@@ -7,3 +7,4 @@ C:\Users\tsrch\OneDrive\Documents\RhinoDev\LandArchTools\LandArchTools\obj\Debug
 C:\Users\tsrch\OneDrive\Documents\RhinoDev\LandArchTools\LandArchTools\obj\Debug\net48\LandArchTools.csproj.CoreCompileInputs.cache
 C:\Users\tsrch\OneDrive\Documents\RhinoDev\LandArchTools\LandArchTools\obj\Debug\net48\LandArchTools.rhp
 C:\Users\tsrch\OneDrive\Documents\RhinoDev\LandArchTools\LandArchTools\obj\Debug\net48\LandArchTools.pdb
+C:\Users\tsrch\OneDrive\Documents\RhinoDev\LandArchTools\LandArchTools\obj\Debug\net48\LandArchTools.sourcelink.json

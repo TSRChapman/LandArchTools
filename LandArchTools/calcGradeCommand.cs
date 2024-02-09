@@ -36,26 +36,34 @@ namespace LandArchTools
 
                 // Get first point
                 GetPoint gp = new GetPoint();
+                // This shows the command prompt
                 gp.SetCommandPrompt("Select first point");
+                // This activates the get point command
                 gp.Get();
+                // This checks if the command was successful
                 if (gp.CommandResult() != Result.Success)
                 {
                     RhinoApp.WriteLine("Failed to get First Point");
                     return gp.CommandResult();
                 }
+                // This stores the point in a variable once the command is successful
                 Point3d pt1 = gp.Point();
 
                 // Get second point with dynamic draw
                 gp.SetCommandPrompt("Select second point");
+                // This activates the dynamic draw function while the user is selecting the second point
                 gp.DynamicDraw += (sender, e) => GetPointDynamicDrawFunc(sender, e, pt1, scale, imperial, doc);
+                // This activates the get point command
                 gp.Get();
+                // This checks if the command was successful
                 if (gp.CommandResult() != Result.Success)
                 {
                     RhinoApp.WriteLine("Failed to get Second Point");
                     return gp.CommandResult();
                 }
+                // This stores the second point in a variable once the command is successful
                 Point3d pt2 = gp.Point();
-
+                // Once the second point is selected, the dynamic draw function is removed and a point is drawn at the midpoint of the line
                 CalculateAndDisplayGrade(pt1, pt2, scale, imperial, doc);
             }
             catch (Exception ex)
@@ -94,8 +102,53 @@ namespace LandArchTools
 
         private void CalculateAndDisplayGrade(Point3d pt1, Point3d pt2, double scale, bool imperial, RhinoDoc doc)
         {
-            // Logic to calculate and display grade similar to your Python script
+            // Enable or disable redraw
+            doc.Views.RedrawEnabled = false;
+
+            // Calculate the hypotenuse
+            double hypotenuse = pt1.DistanceTo(pt2);
+
+            // Find the rise of the given points in any order
+            double rise = Math.Abs(pt1.Z - pt2.Z);
+
+            // Find the run of the given points
+            double run = Math.Sqrt(Math.Pow(hypotenuse, 2) - Math.Pow(rise, 2));
+
+            // Adjust for scale
+            rise *= scale;
+            run *= scale;
+
+            // Check for a valid grade to calculate
+            if (rise == 0)
+            {
+                doc.Views.RedrawEnabled = true;
+                RhinoApp.WriteLine("No Grade Found");
+                return;
+            }
+
+            // Calculate grade
+            double grade = run / rise;
+            string gradeText;
+            if (imperial)
+            {
+                grade = (1 / grade) * 100; // Convert to percentage for imperial
+                gradeText = $"{Math.Abs(Math.Round(grade, 2))}%";
+            }
+            else
+            {
+                gradeText = $"1:{Math.Abs(Math.Round(grade, 2))}"; // Metric representation
+            }
+
+            // Create and place a text dot with the grade information
+            Line curve = new Line(pt1, pt2);
+            Point3d midpoint = curve.PointAt(0.5);
+            doc.Objects.AddTextDot(gradeText, midpoint);
+
+            // Re-enable redraw and refresh views
+            doc.Views.RedrawEnabled = true;
+            doc.Views.Redraw();
         }
+
 
         private (double, bool) Scaling(RhinoDoc doc)
         {
