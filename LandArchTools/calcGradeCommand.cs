@@ -1,12 +1,12 @@
-﻿using Rhino;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using Rhino;
 using Rhino.Commands;
+using Rhino.DocObjects;
 using Rhino.Geometry;
 using Rhino.Input;
 using Rhino.Input.Custom;
-using System;
-using System.Collections.Generic;
-using Rhino.DocObjects;
-using System.Drawing;
 
 namespace LandArchTools
 {
@@ -27,8 +27,8 @@ namespace LandArchTools
 
         protected override Result RunCommand(RhinoDoc doc, RunMode mode)
         {
-            // TODO: start here modifying the behaviour of your command.
-            // ---
+            // Main Command Logic
+
 
             try
             {
@@ -52,7 +52,8 @@ namespace LandArchTools
                 // Get second point with dynamic draw
                 gp.SetCommandPrompt("Select second point");
                 // This activates the dynamic draw function while the user is selecting the second point
-                gp.DynamicDraw += (sender, e) => GetPointDynamicDrawFunc(sender, e, pt1, scale, imperial, doc);
+                gp.DynamicDraw += (sender, e) =>
+                    GetPointDynamicDrawFunc(sender, e, pt1, scale, imperial, doc);
                 // This activates the get point command
                 gp.Get();
                 // This checks if the command was successful
@@ -76,7 +77,14 @@ namespace LandArchTools
             return Result.Success;
         }
 
-        private void GetPointDynamicDrawFunc(object sender, GetPointDrawEventArgs e, Point3d pt1, double scale, bool imperial, RhinoDoc doc)
+        private void GetPointDynamicDrawFunc(
+            object sender,
+            GetPointDrawEventArgs e,
+            Point3d pt1,
+            double scale,
+            bool imperial,
+            RhinoDoc doc
+        )
         {
             // Similar dynamic drawing logic as in your Python script
             Point3d currentPoint = e.CurrentPoint;
@@ -84,7 +92,7 @@ namespace LandArchTools
             Line line01 = new Line(pt1, currentPoint);
             Line line02 = new Line(currentPoint, projectedPoint);
             Line line03 = new Line(projectedPoint, pt1);
-            Point3d midPoint01 = line01.PointAt(0.5);
+
             Circle circle = new Circle(pt1, line03.Length);
 
             // Define colors
@@ -97,10 +105,53 @@ namespace LandArchTools
             e.Display.DrawLine(line01, pinkColour, 4);
             e.Display.DrawLine(line02, blueColour, 5);
             e.Display.DrawLine(line03, blueColour, 4);
-            // Grade calculation and display logic here
+
+            // Calculate grade
+            double rise = Math.Abs(pt1.Z - currentPoint.Z) * scale;
+            double run = line03.Length * scale;
+
+            // Avoid division by zero
+            if (rise != 0 && run != 0)
+            {
+                double grade;
+                string gradeText;
+
+                grade = run / rise;
+
+                // Just show the percentage for imperial, as it's the most common
+                if (imperial)
+                {
+                    grade = (1 / grade) * 100; 
+                    gradeText = $"{Math.Abs(Math.Round(grade, 2))}% Grade";
+                }
+                // Metric displays both percent and ratio as both are commonly used in industry
+                else
+                {
+                    gradeText =
+                        $"1:{Math.Abs(Math.Round(grade, 2))} / {Math.Abs(Math.Round(((1 / grade) * 100), 2))}% Grade";
+                }
+
+                // Drawing the grade text
+                Point3d midPoint01 = line01.PointAt(0.5);
+
+                e.Display.DrawDot(midPoint01, gradeText, greyColour, blackColour);
+            }
+            else
+            {
+                // Display "No Grade" if there's no significant rise or run
+                Point3d midPoint01 = line01.PointAt(0.5);
+
+                e.Display.DrawDot(midPoint01, "No Grade", greyColour, blackColour);
+            }
         }
 
-        private void CalculateAndDisplayGrade(Point3d pt1, Point3d pt2, double scale, bool imperial, RhinoDoc doc)
+        private void CalculateAndDisplayGrade(
+            Point3d pt1,
+            Point3d pt2,
+            double scale,
+            bool imperial,
+            RhinoDoc doc
+        )
         {
             // Enable or disable redraw
             doc.Views.RedrawEnabled = false;
@@ -132,11 +183,12 @@ namespace LandArchTools
             if (imperial)
             {
                 grade = (1 / grade) * 100; // Convert to percentage for imperial
-                gradeText = $"{Math.Abs(Math.Round(grade, 2))}%";
+                gradeText = $"{Math.Abs(Math.Round(grade, 2))}% Grade";
             }
             else
             {
-                gradeText = $"1:{Math.Abs(Math.Round(grade, 2))}"; // Metric representation
+                gradeText =
+                    $"1:{Math.Abs(Math.Round(grade, 2))} / {Math.Abs(Math.Round(((1 / grade) * 100), 2))}% Grade";
             }
 
             // Create and place a text dot with the grade information
@@ -149,11 +201,13 @@ namespace LandArchTools
             doc.Views.Redraw();
         }
 
-
         private (double, bool) Scaling(RhinoDoc doc)
         {
             UnitSystem unitSystem = doc.ModelUnitSystem;
-            bool imperial = unitSystem != UnitSystem.Millimeters && unitSystem != UnitSystem.Centimeters && unitSystem != UnitSystem.Meters;
+            bool imperial =
+                unitSystem != UnitSystem.Millimeters
+                && unitSystem != UnitSystem.Centimeters
+                && unitSystem != UnitSystem.Meters;
             double scale = RhinoMath.UnitScale(unitSystem, UnitSystem.Millimeters);
             return (scale, imperial);
         }
