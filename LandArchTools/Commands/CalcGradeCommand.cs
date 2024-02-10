@@ -7,9 +7,18 @@ using Rhino.DocObjects;
 using Rhino.Geometry;
 using Rhino.Input;
 using Rhino.Input.Custom;
+
+/* Unmerged change from project 'LandArchTools (net7.0)'
+Before:
+using LandArchTools.Utilities;
+After:
+using LandArchTools.Utilities;
+using LandArchTools;
+using LandArchTools.Commands;
+*/
 using LandArchTools.Utilities;
 
-namespace LandArchTools
+namespace LandArchTools.Commands
 {
     public class CalcGradeCommand : Command
     {
@@ -122,14 +131,14 @@ namespace LandArchTools
                 // Just show the percentage for imperial, as it's the most common
                 if (imperial)
                 {
-                    grade = (1 / grade) * 100; 
+                    grade = 1 / grade * 100;
                     gradeText = $"{Math.Abs(Math.Round(grade, 2))}% Grade";
                 }
                 // Metric displays both percent and ratio as both are commonly used in industry
                 else
                 {
                     gradeText =
-                        $"1:{Math.Abs(Math.Round(grade, 2))} / {Math.Abs(Math.Round(((1 / grade) * 100), 2))}% Grade";
+                        $"1:{Math.Abs(Math.Round(grade, 2))} / {Math.Abs(Math.Round(1 / grade * 100, 2))}% Grade";
                 }
 
                 // Drawing the grade text
@@ -183,13 +192,13 @@ namespace LandArchTools
             string gradeText;
             if (imperial)
             {
-                grade = (1 / grade) * 100; // Convert to percentage for imperial
+                grade = 1 / grade * 100; // Convert to percentage for imperial
                 gradeText = $"{Math.Abs(Math.Round(grade, 2))}% Grade";
             }
             else
             {
                 gradeText =
-                    $"1:{Math.Abs(Math.Round(grade, 2))} / {Math.Abs(Math.Round(((1 / grade) * 100), 2))}% Grade";
+                    $"1:{Math.Abs(Math.Round(grade, 2))} / {Math.Abs(Math.Round(1 / grade * 100, 2))}% Grade";
             }
 
             // Create and place a text dot with the grade information
@@ -202,6 +211,6 @@ namespace LandArchTools
             doc.Views.Redraw();
         }
 
-        
+
     }
 }

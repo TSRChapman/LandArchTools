@@ -7,7 +7,7 @@ using Rhino.Commands;
 using Rhino.Geometry;
 using Rhino.Input.Custom;
 
-namespace LandArchTools
+namespace LandArchTools.Commands
 {
     public class ShowRLCommand : Rhino.Commands.Command
     {
@@ -30,6 +30,7 @@ namespace LandArchTools
 
                 // Get point with dynamic draw
                 var gp = new GetPoint();
+                // This activates the dynamic draw function while the user is selecting the point
                 gp.DynamicDraw += (sender, args) =>
                     GetPointDynamicDrawFunc(sender, args, scale, imperial, doc);
                 gp.SetCommandPrompt("Select point to show RL");
@@ -60,7 +61,7 @@ namespace LandArchTools
 
                 // Copy RL to Clipboard
                 Clipboard.Instance.Text = rlText;
-                
+
 
                 return Result.Success;
             }
@@ -85,10 +86,10 @@ namespace LandArchTools
 
             var point = e.CurrentPoint;
             var circle = new Circle(point, 1 / scale);
-            var line01 = new Line(point, new Point3d(point.X + (1 / scale), point.Y, point.Z));
-            var line02 = new Line(point, new Point3d(point.X - (1 / scale), point.Y, point.Z));
-            var line03 = new Line(point, new Point3d(point.X, point.Y + (1 / scale), point.Z));
-            var line04 = new Line(point, new Point3d(point.X, point.Y - (1 / scale), point.Z));
+            var line01 = new Line(point, new Point3d(point.X + 1 / scale, point.Y, point.Z));
+            var line02 = new Line(point, new Point3d(point.X - 1 / scale, point.Y, point.Z));
+            var line03 = new Line(point, new Point3d(point.X, point.Y + 1 / scale, point.Z));
+            var line04 = new Line(point, new Point3d(point.X, point.Y - 1 / scale, point.Z));
 
             var pinkColour = Color.FromArgb(255, 0, 133);
             var blueColour = Color.FromArgb(82, 187, 209);
@@ -112,7 +113,7 @@ namespace LandArchTools
             }
 
 
-            e.Display.DrawDot((new Point3d(e.CurrentPoint.X, e.CurrentPoint.Y, (e.CurrentPoint.Z + 0.5 / scale))), rl, greyColour, blackColour);
+            e.Display.DrawDot(new Point3d(e.CurrentPoint.X, e.CurrentPoint.Y, e.CurrentPoint.Z + 0.5 / scale), rl, greyColour, blackColour);
         }
 
     }
