@@ -108,7 +108,7 @@ namespace LandArchTools.Commands
             double run = pt1.DistanceTo(pt2) * scale;
             // Calculate the rise and run in percentage and ratio, catch divide by zero
             double rGrade = rise != 0 ? run / rise : 0;
-            double pGrade = rGrade = rGrade != 0 ? 1 / rGrade * 100 : 0;
+            double pGrade = rGrade != 0 ? 1 / rGrade * 100 : 0;
 
             return imperial
                 ? $"{Math.Abs(Math.Round(pGrade, 2))}% Grade"
