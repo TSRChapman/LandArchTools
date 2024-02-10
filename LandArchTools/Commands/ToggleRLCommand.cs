@@ -7,15 +7,15 @@ using Rhino.DocObjects;
 
 namespace LandArchTools.Commands
 {
-    public class MyRhinoCommand1 : Command
+    public class ToggleRLCommand : Command
     {
-        public MyRhinoCommand1()
+        public ToggleRLCommand()
         {
             Instance = this;
         }
 
         ///<summary>The only instance of the MyCommand command.</summary>
-        public static MyRhinoCommand1 Instance { get; private set; }
+        public static ToggleRLCommand Instance { get; private set; }
 
         public override string EnglishName => "ToggleLevels";
 

@@ -25,14 +25,10 @@ namespace LandArchTools.Commands
         {
             try
             {
-                // Get scale and units used in the document
-                (double scale, bool imperial) = scaleHelper.Scaling(doc);
+                var (scale, imperial) = scaleHelper.Scaling(doc);
 
-                // Get point with dynamic draw
                 var gp = new GetPoint();
-                // This activates the dynamic draw function while the user is selecting the point
-                gp.DynamicDraw += (sender, args) =>
-                    GetPointDynamicDrawFunc(sender, args, scale, imperial, doc);
+                gp.DynamicDraw += (sender, args) => GetPointDynamicDrawFunc(sender, args, scale, imperial);
                 gp.SetCommandPrompt("Select point to show RL");
                 gp.Get();
 
@@ -40,28 +36,15 @@ namespace LandArchTools.Commands
                     return gp.CommandResult();
 
                 var point = gp.Point();
-
-                double pointZ = point.Z * scale;
-                string rlText;
-
-                if (!imperial)
-                {
-                    rlText = $"+RL {Math.Round(pointZ, 3)} m";
-                }
-                else
-                {
-                    rlText = $"+RL {Math.Round(pointZ, 3)} ft";
-                }
+                var pointZ = point.Z * scale;
+                var unit = imperial ? "ft" : "m";
+                var rlText = $"+RL {Math.Round(pointZ, 3)} {unit}";
 
                 var textDot = new TextDot(rlText, point);
                 var textDotId = doc.Objects.AddTextDot(textDot);
-                doc.Objects.FindId(textDotId)
-                    .Attributes.SetUserString("LandArchTools", "RLTextDot");
+                doc.Objects.FindId(textDotId).Attributes.SetUserString("LandArchTools", "RLTextDot");
                 doc.Views.Redraw();
-
-                // Copy RL to Clipboard
                 Clipboard.Instance.Text = rlText;
-
 
                 return Result.Success;
             }
@@ -72,48 +55,28 @@ namespace LandArchTools.Commands
             }
         }
 
-        private void GetPointDynamicDrawFunc(
-            object sender,
-            GetPointDrawEventArgs e,
-            double scale,
-            bool imperial,
-            RhinoDoc doc
-        )
+        private void GetPointDynamicDrawFunc(object sender, GetPointDrawEventArgs e, double scale, bool imperial)
         {
-            // print to the command line the scale and imperial status
-            RhinoApp.WriteLine($"Scale: {scale}, Imperial: {imperial}");
-
-
+            var scaleFactor = 1 / scale;
             var point = e.CurrentPoint;
-            var circle = new Circle(point, 1 / scale);
-            var line01 = new Line(point, new Point3d(point.X + 1 / scale, point.Y, point.Z));
-            var line02 = new Line(point, new Point3d(point.X - 1 / scale, point.Y, point.Z));
-            var line03 = new Line(point, new Point3d(point.X, point.Y + 1 / scale, point.Z));
-            var line04 = new Line(point, new Point3d(point.X, point.Y - 1 / scale, point.Z));
-
-            var pinkColour = Color.FromArgb(255, 0, 133);
-            var blueColour = Color.FromArgb(82, 187, 209);
-            var greyColour = Color.FromArgb(216, 220, 219);
-            var blackColour = Color.FromArgb(0, 0, 0);
-
-            e.Display.DrawCircle(circle, pinkColour, 2);
-            e.Display.DrawLine(line01, blueColour, 4);
-            e.Display.DrawLine(line02, blueColour, 4);
-            e.Display.DrawLine(line03, blueColour, 4);
-            e.Display.DrawLine(line04, blueColour, 4);
-
-            string rl;
-            if (!imperial)
+            var circle = new Circle(point, scaleFactor);
+            var lines = new[]
             {
-                rl = $"+RL {Math.Round(point.Z * scale, 3)} m";
-            }
-            else
+                new Line(point, point + new Vector3d(scaleFactor, 0, 0)),
+                new Line(point, point - new Vector3d(scaleFactor, 0, 0)),
+                new Line(point, point + new Vector3d(0, scaleFactor, 0)),
+                new Line(point, point - new Vector3d(0, scaleFactor, 0))
+            };
+
+            e.Display.DrawCircle(circle, Color.FromArgb(255, 0, 133), 2);
+            foreach (var line in lines)
             {
-                rl = $"+RL {Math.Round(point.Z * scale, 3)} ft";
+                e.Display.DrawLine(line, Color.FromArgb(82, 187, 209), 4);
             }
 
-
-            e.Display.DrawDot(new Point3d(e.CurrentPoint.X, e.CurrentPoint.Y, e.CurrentPoint.Z + 0.5 / scale), rl, greyColour, blackColour);
+            var unit = imperial ? "ft" : "m";
+            var rl = $"+RL {Math.Round(point.Z * scale, 3)} {unit}";
+            e.Display.DrawDot(point + new Vector3d(0, 0, 0.5 * scaleFactor), rl, Color.FromArgb(216, 220, 219), Color.Black);
         }
 
     }
