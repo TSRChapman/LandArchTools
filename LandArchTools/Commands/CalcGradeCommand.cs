@@ -1,20 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-/* Unmerged change from project 'LandArchTools (net7.0)'
-Before:
-using LandArchTools.Utilities;
-After:
-using LandArchTools.Utilities;
-using LandArchTools;
-using LandArchTools.Commands;
-*/
 using LandArchTools.Utilities;
 using Rhino;
 using Rhino.Commands;
-using Rhino.DocObjects;
 using Rhino.Geometry;
-using Rhino.Input;
 using Rhino.Input.Custom;
 
 namespace LandArchTools.Commands
@@ -69,6 +58,7 @@ namespace LandArchTools.Commands
             }
         }
 
+        // Get a point from the user and set up dynamic draw
         private Point3d GetPoint(
             string commandPrompt,
             EventHandler<GetPointDrawEventArgs> dynamicDrawFunc = null
@@ -83,7 +73,8 @@ namespace LandArchTools.Commands
             gp.Get();
             return gp.CommandResult() == Result.Success ? gp.Point() : Point3d.Unset;
         }
-
+        
+        // Draw dynamic geometry for the GetPoint
         private void GetPointDynamicDrawFunc(
             object sender,
             GetPointDrawEventArgs e,
@@ -94,14 +85,22 @@ namespace LandArchTools.Commands
         )
         {
             Point3d currentPoint = e.CurrentPoint;
+            Point3d projectedPoint = new Point3d(currentPoint.X, currentPoint.Y, pt1.Z);
             Line line01 = new Line(pt1, currentPoint);
+            Line line02 = new Line(currentPoint, projectedPoint);
+            Line line03 = new Line(projectedPoint, pt1);
+
+            e.Display.DrawCircle(new Circle(pt1, line03.Length), BlackColor, 2);
             e.Display.DrawLine(line01, PinkColor, 4);
+            e.Display.DrawLine(line02, BlueColor, 5);
+            e.Display.DrawLine(line03, BlueColor, 4);
 
             string gradeText = CalculateGradeText(pt1, currentPoint, scale, imperial);
             Point3d midPoint01 = line01.PointAt(0.5);
             e.Display.DrawDot(midPoint01, gradeText, GreyColor, BlackColor);
         }
 
+        // Calculate the grade
         private string CalculateGradeText(Point3d pt1, Point3d pt2, double scale, bool imperial)
         {
             double rise = Math.Abs(pt1.Z - pt2.Z) * scale;
@@ -115,6 +114,7 @@ namespace LandArchTools.Commands
                 : $"1:{Math.Abs(Math.Round(rGrade, 2))} / {Math.Abs(Math.Round(pGrade, 2))}% Grade";
         }
 
+        // Calculate and display the grade in the RhinoDoc
         private void CalculateAndDisplayGrade(
             Point3d pt1,
             Point3d pt2,
