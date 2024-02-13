@@ -9,6 +9,7 @@ LandArchTools is a sophisticated toolkit initially developed as a Python plugin,
 - **Native C# Plugin:** Rebuilt from the ground up in C# for enhanced execution speed and stability within Rhino 8.
 - **Updated Toolbar:** A modernized toolbar featuring SVG icons, ensuring crisp visuals across all displays and compatibility with both MacOS and Rhino 8's new UI system.
 - **Grade Calculator/Ruler Enhancement:** Now includes a percentage grade calculation feature, adding more utility for precise landscape design.
+- **Grade Curve:** Curve modification is now more robust, fixed some edge cases where grading may fail to be continous along the length of the curve.
 - **Cross-Platform Compatibility:** Designed to work seamlessly on both Windows and MacOS, catering to a wider range of design professionals.
 - **And Much More:** Continuous updates and new features are being added to enrich your design process further.
 
