@@ -22,104 +22,108 @@ namespace LandArchTools.Commands
 
         protected override Result RunCommand(RhinoDoc doc, RunMode mode)
         {
-            // Get the curve object
-            ObjRef objRef;
-            Result res = RhinoGet.GetOneObject("Select curve to grade", false, ObjectType.Curve, out objRef);
-
-            if (res != Result.Success || objRef == null)
+            // Get the curve from the user
+            if (!TryGetCurveFromUser(out Curve curve))
             {
-                RhinoApp.WriteLine("No curve selected.");
                 return Result.Failure;
             }
 
-            Curve crv = objRef.Curve();
-            NurbsCurve pCrv = crv.ToNurbsCurve();
+            // Convert the curve to a NurbsCurve for easier manipulation eg greville points
+            NurbsCurve nurbsCurve = curve.ToNurbsCurve();
 
-            if (crv == null)
+            // Check if the conversion was successful
+            if (nurbsCurve == null)
             {
-                RhinoApp.WriteLine("No curve selected.");
+                RhinoApp.WriteLine("Curve conversion to NurbsCurve failed.");
                 return Result.Failure;
             }
 
-            // Get the grade ratio or height from the user
-            double grade = 0;
-            double height = 0;
-            
-            RhinoGet.GetNumber("Enter grade ratio number, or ENTER for height", false, ref grade);
-            
-            if (grade == 0)
+            // Get the grade or height from the user
+            if (!TryGetUserInput(out double grade, out double height))
             {
-                RhinoGet.GetNumber("Enter height", true, ref height);
-
-                if (height == 0)
-                {
-                    RhinoApp.WriteLine("No user input.");
-                    return Result.Failure;
-                }
+                return Result.Failure;
             }
 
-            doc.Objects.UnselectAll();
-            doc.Views.Redraw();
+            // Calculate the modified points using either grade or height
+            List<Point3d> modifiedPoints = grade > 0 ? CalculateModifiedPointsByGrade(nurbsCurve, grade, doc) : CalculateModifiedPointsByHeight(nurbsCurve, height);
 
-            // get greville points from pCrv
-            var ctrlPts = pCrv.GrevillePoints();
-            var crvLengths = new List<double>();
-            double startParam = pCrv.Domain.T0;
-
-            if (grade > 0)
-            {
-                for (int i = 0; i < ctrlPts.Count; i++)
-                {
-                    /*double paramNum = crv.Domain.ParameterAtNormalizedLength(crv.GetLength(new Interval(startParam, ctrlPts[i].Location.Z)) / crv.GetLength());*/
-                    double paramNum = pCrv.GrevilleParameter(i);
-                    crvLengths.Add(crv.GetLength(new Interval(startParam, paramNum)));
-                }
-
-                // Calculate new Z values based on grade
-                var newGrips = new List<Point3d>();
-                for (int i = 0; i < crvLengths.Count; i++)
-                {
-                    double rise = crvLengths[i] / grade;
-                    Point3d newPt = new Point3d(ctrlPts[i].X, ctrlPts[i].Y, ctrlPts[i].Z + rise);
-                    newGrips.Add(newPt);
-                }
-
-                // create a copy of the curve in the doc
-                var newCrv = pCrv.DuplicateCurve();
-                doc.Objects.AddCurve(newCrv);
-
-                // Modify the curve
-                ModifyCurve(doc, objRef, newGrips);
-            }
-            else if (height > 0)
-            {
-                var newGrips = new List<Point3d>();
-                for (int i = 0; i < ctrlPts.Count; i++)
-                {
-                    double normParam = (double)i / (ctrlPts.Count - 1);
-                    double targetHeight = (height * normParam);
-                    Point3d newPt = new Point3d(ctrlPts[i].X, ctrlPts[i].Y, ctrlPts[i].Z + targetHeight);
-                    newGrips.Add(newPt);
-                }
-
-                // create a copy of the curve in the doc
-                var newCrv = pCrv.DuplicateCurve();
-                doc.Objects.AddCurve(newCrv);
-
-                // Modify the curve
-                ModifyCurve(doc, objRef, newGrips);
-            }
+            // Modify the curve and add new curve to the document
+            ModifyAndReplaceCurve(doc, curve, modifiedPoints);
 
             doc.Views.Redraw();
             return Result.Success;
         }
 
-        private void ModifyCurve(RhinoDoc doc, ObjRef objRef, List<Point3d> newGrips)
-        {
-            Curve curve = objRef.Curve();
-            if (curve == null) return;
 
-            var newCurve = curve.ToNurbsCurve();
+        private bool TryGetCurveFromUser(out Curve curve)
+        {
+            curve = null;
+            Result res = RhinoGet.GetOneObject("Select curve to grade", false, ObjectType.Curve, out ObjRef objRef);
+
+            if (res != Result.Success)
+            {
+                RhinoApp.WriteLine("No curve selected.");
+                return false;
+            }
+
+            curve = objRef.Curve();
+            return curve != null;
+        }
+
+        private bool TryGetUserInput(out double grade, out double height)
+        {
+            grade = 0;
+            height = 0;
+
+            if (RhinoGet.GetNumber("Enter grade ratio number, or ENTER for height", false, ref grade) != Result.Success || grade == 0)
+            {
+                if (RhinoGet.GetNumber("Enter height", true, ref height) != Result.Success || height == 0)
+                {
+                    RhinoApp.WriteLine("Invalid input for grade or height.");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private List<Point3d> CalculateModifiedPointsByGrade(NurbsCurve curve, double grade, RhinoDoc doc)
+        {
+            var modifiedPoints = new List<Point3d>();
+            var ctrlPts = curve.Points;
+
+            double startParam = curve.Domain.T0;
+
+            for (int i = 0; i < ctrlPts.Count; i++)
+            {
+                // Greville points result in less alignment to grade but are more robust in certain cases
+                double paramNum = curve.GrevilleParameter(i);
+                double length = curve.GetLength(new Interval(startParam, paramNum));
+                double rise = length / grade;
+                modifiedPoints.Add(new Point3d(ctrlPts[i].X, ctrlPts[i].Y, ctrlPts[i].Z + rise));
+            }
+
+            return modifiedPoints;
+        }
+
+        private List<Point3d> CalculateModifiedPointsByHeight(NurbsCurve curve, double height)
+        {
+            var modifiedPoints = new List<Point3d>();
+            var ctrlPts = curve.Points;
+
+            for (int i = 0; i < ctrlPts.Count; i++)
+            {
+                double normParam = (double)i / (ctrlPts.Count - 1);
+                double targetHeight = height * normParam;
+                modifiedPoints.Add(new Point3d(ctrlPts[i].X, ctrlPts[i].Y, ctrlPts[i].Z + targetHeight));
+            }
+
+            return modifiedPoints;
+        }
+
+        private void ModifyAndReplaceCurve(RhinoDoc doc, Curve originalCurve, List<Point3d> newGrips)
+        {
+            var newCurve = originalCurve.ToNurbsCurve();
             if (newCurve == null) return;
 
             for (int i = 0; i < newGrips.Count && i < newCurve.Points.Count; i++)
@@ -127,7 +131,9 @@ namespace LandArchTools.Commands
                 newCurve.Points.SetPoint(i, newGrips[i]);
             }
 
-            doc.Objects.Replace(objRef, newCurve);
+            doc.Objects.Add(newCurve);
         }
+
+
     }
 }
