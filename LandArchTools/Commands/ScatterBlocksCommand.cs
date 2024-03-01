@@ -65,7 +65,7 @@ namespace LandArchTools.Commands
                 scatterPointsOnMesh(verts, totalArea, numBlocks, out Point3d[] points, doc);
 
                 // Move blocks to points
-                moveBlockstoPoints(points, blocks, rotation, doc);
+                moveBlockstoPoints(points, blocks, rotation, scale, doc);
 
                 // Turn Redraw back on
                 doc.Views.RedrawEnabled = true;
@@ -85,10 +85,12 @@ namespace LandArchTools.Commands
         /// Move blocks to points
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
-        private static void moveBlockstoPoints(Point3d[] points, ObjRef[] blocks, bool rotation, RhinoDoc doc)
+        private static void moveBlockstoPoints(Point3d[] points, ObjRef[] blocks, bool rotation, double scale, RhinoDoc doc)
         {
             // Shuffle points to randomize placement, chunk points into sub lists for each block
             Random rand = new Random();
+            // print points to rhino console
+            RhinoApp.WriteLine("Points: " + points.Length);
             points = points.OrderBy(x => rand.Next()).ToArray();
             int pointDivision = points.Length / blocks.Length;
             var genList = listHelper.ChunkBy(points.ToList(), pointDivision);
@@ -97,23 +99,40 @@ namespace LandArchTools.Commands
             foreach (var pts in genList)
             {
                 var block = blocks[blockIndex].Object() as InstanceObject;
-                var blockPt = block.InsertionPoint;
 
                 foreach (var pt in pts)
                 {
-                    RhinoApp.WriteLine("Moving block to point");
-                   Vector3d vec = pt - blockPt;
+                    // Create a vector from the block insertion point to the point on the mesh
+                    Vector3d vec = pt - new Point3d(0,0,0);
 
-                    // create new block instance and move to point
+                    // Create new block instance and move to point
+                    var blockI = block.InstanceDefinition.Index;
+                    var transform = Transform.Translation(vec);
 
-                    var newBlock = block.InstanceDefinition.Index;
-                    doc.Objects.AddInstanceObject(newBlock, Transform.Translation(vec));
+                    // if user wants rotation add that to the transform
+                    if (rotation == true)
+                    {
+                        var randRot = rand.Next(0, 360);
+                        var rot = Transform.Rotation(randRot, new Point3d(0, 0, 0));
+                        transform = transform * rot;
+                    }
 
-                   
-                }   
+                    // if user wants random scaling add that to the transform
+                    if (scale != 0)
+                    {
+                        var randScale = rand.NextDouble() * scale;
+                        var scaleT = Transform.Scale(new Point3d(0, 0, 0), randScale);
+                        transform = transform * scaleT;
+                    }
+
+
+                    doc.Objects.AddInstanceObject(blockI, transform);
+                }
+
+                blockIndex++;
             }
-            
-            
+
+
 
         }
 
@@ -129,7 +148,10 @@ namespace LandArchTools.Commands
             RhinoDoc doc
         )
         {
-            points = null;
+           
+            // empty point list
+            var pointList = new Point3d[0];
+
             double pointBucket = 0.0;
             foreach (var i in verts)
             {
@@ -186,10 +208,16 @@ namespace LandArchTools.Commands
 
                     // tranform 2d points to 3d space
                     var point = new Point3d(p + originVector);
+                    // add point to doc
+                    doc.Objects.AddPoint(point);
 
-                    doc.Objects.AddPoint(new Point3d(point));
+                    pointList = pointList.Append(point).ToArray();
+
                 }
             }
+
+            points = pointList;
+            RhinoApp.WriteLine("Points: " + pointList.Length);
         }
 
         /// <summary>
@@ -353,7 +381,7 @@ namespace LandArchTools.Commands
             scale = scaleChoice;
 
             // get user input for yes or no on rotation
-            bool rotationChoice = false;
+            bool rotationChoice = true;
             Result r5 = RhinoGet.GetBool("Rotate Objects?", true, "No", "Yes", ref rotationChoice);
             if (r5 != Result.Success)
                 return r5;
