@@ -27,7 +27,9 @@ namespace LandArchTools.Commands
         {
             try
             {
-                getUserOptions(out ObjRef[] objRefs, out ObjRef surfaceRef, doc);
+                Result r1 = getUserOptions(out ObjRef[] objRefs, out ObjRef surfaceRef, doc);
+                if (r1 != Result.Success)
+                    return r1;
 
                 dropObjects(objRefs, surfaceRef, doc);
 
