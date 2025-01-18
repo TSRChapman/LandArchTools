@@ -1,0 +1,9 @@
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\bin\Debug\net48\LandArchTools.rhp
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\bin\Debug\net48\LandArchTools.pdb
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\obj\Debug\net48\LandArchTools.csproj.AssemblyReference.cache
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\obj\Debug\net48\LandArchTools.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\obj\Debug\net48\LandArchTools.AssemblyInfoInputs.cache
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\obj\Debug\net48\LandArchTools.AssemblyInfo.cs
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\obj\Debug\net48\LandArchTools.csproj.CoreCompileInputs.cache
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\obj\Debug\net48\LandArchTools.rhp
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\obj\Debug\net48\LandArchTools.pdb

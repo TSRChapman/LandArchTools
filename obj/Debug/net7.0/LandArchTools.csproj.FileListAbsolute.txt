@@ -1,0 +1,14 @@
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\bin\Debug\net7.0\LandArchTools.deps.json
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\bin\Debug\net7.0\LandArchTools.runtimeconfig.json
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\bin\Debug\net7.0\LandArchTools.rhp
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\bin\Debug\net7.0\LandArchTools.pdb
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\obj\Debug\net7.0\LandArchTools.csproj.AssemblyReference.cache
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\obj\Debug\net7.0\LandArchTools.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\obj\Debug\net7.0\LandArchTools.AssemblyInfoInputs.cache
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\obj\Debug\net7.0\LandArchTools.AssemblyInfo.cs
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\obj\Debug\net7.0\LandArchTools.csproj.CoreCompileInputs.cache
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\obj\Debug\net7.0\LandArchTools.rhp
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\obj\Debug\net7.0\refint\LandArchTools.rhp
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\obj\Debug\net7.0\LandArchTools.pdb
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\obj\Debug\net7.0\LandArchTools.genruntimeconfig.cache
+C:\Users\tsrch\OneDrive\Documents\LandArchTools\LandArchTools\obj\Debug\net7.0\ref\LandArchTools.rhp
