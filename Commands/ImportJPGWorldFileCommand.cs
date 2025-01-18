@@ -1,13 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Drawing;
-using System.Drawing.Imaging;
 using Rhino;
 using Rhino.Commands;
-using Rhino.Input;
 using Rhino.Geometry;
-using LandArchTools.Utilities;
-using Rhino.UI;
+
 
 
 namespace LandArchTools.Commands
@@ -23,7 +20,7 @@ namespace LandArchTools.Commands
         public static ImportNearMapsCommand Instance { get; private set; }
 
         ///<returns>The command name as it appears on the Rhino command line.</returns>
-        public override string EnglishName => "ImportNearMaps";
+        public override string EnglishName => "ImportJpgWorldFile";
 
         protected override Result RunCommand(RhinoDoc doc, RunMode mode)
         {
@@ -36,20 +33,14 @@ namespace LandArchTools.Commands
                     return Result.Failure;
                 }
 
-                RhinoApp.WriteLine($"scale: {scale}");
-
                 // Get JGW file
-
                 string jgwPath;
-                OpenFileDialog("Select JGW file", "JGW Files (*.jgw)|*.jgw|All Files (*.*)|*.*", out jgwPath);
-
-              
+                if (!OpenFileDialog("Select JGW file", "JGW Files (*.jgw)|*.jgw|All Files (*.*)|*.*", out jgwPath))
+                    return Result.Cancel;
 
                 // Parse JGW file
                 string[] jgwLines = File.ReadAllLines(jgwPath);
-                // the jgw pixel scale
                 double scaleFactor01 = double.Parse(jgwLines[0]);
-                // 
                 double worldX = double.Parse(jgwLines[4]) * scale;
                 double worldY = double.Parse(jgwLines[5]) * scale;
 
@@ -102,8 +93,10 @@ namespace LandArchTools.Commands
         private bool OpenFileDialog(string title, string filter, out string filePath)
         {
             var fd = new Rhino.UI.OpenFileDialog { Title = title, Filter = filter };
-            if (fd.ShowOpenDialog())
+            fd.ShowOpenDialog();
+            if (fd.FileName.Length > 0)
             {
+                RhinoApp.WriteLine("success");
                 filePath = fd.FileName;
                 return true;
             }

@@ -18,7 +18,7 @@
         </text>
         <tool_bar_id>d8dc19cb-56d8-4f50-b015-76d6b2e6fb1f</tool_bar_id>
       </tool_bar_group_item>
-      <dock_bar_info dpi_scale="150" dock_bar="False" docking="True" horz="False" visible="True" floating="False" mru_float_style="8192" bar_id="59482" mru_width="114" point_pos="0,23" float_point="13,25" rect_mru_dock_pos="0,23,131,27" dock_location_u="59419" dock_location="top" float_size="880,62" />
+      <dock_bar_info dpi_scale="150" dock_bar="False" docking="True" horz="False" visible="True" floating="False" mru_float_style="8192" bar_id="59482" mru_width="76" point_pos="0,15" float_point="9,17" rect_mru_dock_pos="0,15,87,18" dock_location_u="59419" dock_location="top" float_size="880,62" />
     </tool_bar_group>
   </tool_bar_groups>
   <tool_bars>
@@ -104,7 +104,7 @@
       <tool_bar_item guid="2dce03e3-13e1-4b50-a92c-2f59b9947d33">
         <left_macro_id>c047d19d-b398-41b0-9fd8-74fe11b70e04</left_macro_id>
       </tool_bar_item>
-      <tool_bar_item guid="135b9233-ad6d-4ea1-b6b8-967e3eb44a41">
+      <tool_bar_item guid="d9b9d6a7-4dc4-470b-a3a6-107c816806f7">
         <left_macro_id>cfb1aa22-1db1-4869-b63d-8a0474245511</left_macro_id>
       </tool_bar_item>
       <tool_bar_item guid="c99e2c9d-6eca-4bb1-b6ed-a1bc76f32a53">
@@ -280,18 +280,6 @@
         <locale_1033>Perspective View</locale_1033>
       </button_text>
       <script>! _SetPerspective</script>
-    </macro_item>
-    <macro_item guid="cfb1aa22-1db1-4869-b63d-8a0474245511" bitmap_id="c351dd99-b010-4a89-86fe-835dd645a1b8">
-      <text>
-        <locale_1033>Macro 11</locale_1033>
-      </text>
-      <tooltip>
-        <locale_1033>Import locate and scale NearMaps jpg</locale_1033>
-      </tooltip>
-      <button_text>
-        <locale_1033>Import locate and scale NearMaps jpg</locale_1033>
-      </button_text>
-      <script>! _ImportNearMaps</script>
     </macro_item>
     <macro_item guid="63812035-1fa4-4e2a-8e3c-41fae14a9a2c" bitmap_id="5bb47664-de86-4b8e-88ce-835cfa2b3981">
       <text>
@@ -680,6 +668,18 @@
         <locale_1033>Toggle Levels On or Off</locale_1033>
       </button_text>
       <script>! _ToggleLevels</script>
+    </macro_item>
+    <macro_item guid="cfb1aa22-1db1-4869-b63d-8a0474245511" bitmap_id="c351dd99-b010-4a89-86fe-835dd645a1b8">
+      <text>
+        <locale_1033>Macro 11</locale_1033>
+      </text>
+      <tooltip>
+        <locale_1033>Import locate and scale NearMaps jpg</locale_1033>
+      </tooltip>
+      <button_text>
+        <locale_1033>Import locate and scale NearMaps jpg</locale_1033>
+      </button_text>
+      <script>! _ImportJpgWorldFile</script>
     </macro_item>
   </macros>
   <icons>
