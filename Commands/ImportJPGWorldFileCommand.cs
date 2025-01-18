@@ -7,6 +7,8 @@ using Rhino.Commands;
 using Rhino.Input;
 using Rhino.Geometry;
 using LandArchTools.Utilities;
+using Rhino.UI;
+
 
 namespace LandArchTools.Commands
 {
@@ -27,31 +29,40 @@ namespace LandArchTools.Commands
         {
             try
             {
-                (double scale, bool imperial) = scaleHelper.Scaling(doc);
-                if (scale == 0)
+                (double scale, bool imperial) = Scaling(doc);
+                if (imperial)
                 {
                     RhinoApp.WriteLine("This tool can only be used in mm, cm or m model units");
                     return Result.Failure;
                 }
 
+                RhinoApp.WriteLine($"scale: {scale}");
+
                 // Get JGW file
-                string jgwFilePath;
-                if (!RhinoGet.GetFileName(out jgwFilePath, OpenFileMode.Open, "Select JGW file", "JGW Files (*.JGW)|*.JGW"))
-                    return Result.Cancel;
+
+                string jgwPath;
+                OpenFileDialog("Select JGW file", "JGW Files (*.jgw)|*.jgw|All Files (*.*)|*.*", out jgwPath);
+
+              
 
                 // Parse JGW file
-                string[] jgwLines = File.ReadAllLines(jgwFilePath);
+                string[] jgwLines = File.ReadAllLines(jgwPath);
+                // the jgw pixel scale
                 double scaleFactor01 = double.Parse(jgwLines[0]);
+                // 
                 double worldX = double.Parse(jgwLines[4]) * scale;
                 double worldY = double.Parse(jgwLines[5]) * scale;
 
+                RhinoApp.WriteLine($"scale: {worldX}");
+
                 // Get JPG file
-                string jpgFilePath;
-                if (!RhinoGet.GetFileName(out jpgFilePath, OpenFileMode.Open, "Select JPG file", "JPG Files (*.JPG)|*.JPG"))
+
+                string jpgPath;
+                if (!OpenFileDialog("Select JPG image file", "JPG Files (*.jpg)|*.jpg|All Files (*.*)|*.*", out jpgPath))
                     return Result.Cancel;
 
                 // Get image dimensions
-                Size imageSize = GetImageDimensions(jpgFilePath);
+                Size imageSize = GetImageDimensions(jpgPath);
                 if (imageSize.IsEmpty)
                 {
                     RhinoApp.WriteLine("Failed to read image dimensions");
@@ -70,7 +81,8 @@ namespace LandArchTools.Commands
 
                 doc.Objects.AddPictureFrame(
                     picturePlane,
-                    jpgFilePath,
+                    jpgPath,
+                    false,
                     scaleFactorWidth,
                     scaleFactorHeight,
                     true,
@@ -87,11 +99,23 @@ namespace LandArchTools.Commands
             }
         }
 
+        private bool OpenFileDialog(string title, string filter, out string filePath)
+        {
+            var fd = new Rhino.UI.OpenFileDialog { Title = title, Filter = filter };
+            if (fd.ShowOpenDialog())
+            {
+                filePath = fd.FileName;
+                return true;
+            }
+            filePath = null;
+            return false;
+        }
+
         private Size GetImageDimensions(string imagePath)
         {
             try
             {
-                using (var image = Image.FromFile(imagePath))
+                using (Image image = Image.FromFile(imagePath))
                 {
                     return image.Size;
                 }
@@ -101,6 +125,20 @@ namespace LandArchTools.Commands
                 RhinoApp.WriteLine($"Error reading image: {ex.Message}");
                 return Size.Empty;
             }
+        }
+
+        private (double, bool) Scaling(RhinoDoc doc)
+        {
+            var unitSystem = doc.ModelUnitSystem;
+            var imperial = unitSystem != UnitSystem.Millimeters &&
+                           unitSystem != UnitSystem.Centimeters &&
+                           unitSystem != UnitSystem.Meters &&
+                           unitSystem != UnitSystem.Kilometers;
+
+            var targetSystem = imperial ? UnitSystem.Feet : UnitSystem.Meters;
+            var scale = RhinoMath.UnitScale(targetSystem, unitSystem );
+
+            return (scale, imperial);
         }
     }
 }
