@@ -110,8 +110,8 @@ namespace LandArchTools.Commands
             double pGrade = rGrade != 0 ? 1 / rGrade * 100 : 0;
 
             return imperial
-                ? $"{Math.Abs(Math.Round(pGrade, 2))}% Grade"
-                : $"1:{Math.Abs(Math.Round(rGrade, 2))} / {Math.Abs(Math.Round(pGrade, 2))}% Grade";
+                ? $"{Math.Abs(Math.Round(pGrade, 0))}% Grade"
+                : $"1:{Math.Abs(Math.Round(rGrade, 0))} / {Math.Abs(Math.Round(pGrade, 0))}% Grade";
         }
 
         // Calculate and display the grade in the RhinoDoc

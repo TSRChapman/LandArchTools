@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Net;
 using Eto.Forms;
 using LandArchTools.Utilities;
 using Rhino;
@@ -57,9 +58,14 @@ namespace LandArchTools.Commands
 
         private void GetPointDynamicDrawFunc(object sender, GetPointDrawEventArgs e, double scale, bool imperial)
         {
-            var scaleFactor = 1 / scale;
+            double worldscale;
+            e.Viewport.GetWorldToScreenScale(e.CurrentPoint, out worldscale);
+            var scaleFactor = (.05 / scale) / worldscale ;
             var point = e.CurrentPoint;
-            var circle = new Circle(point, scaleFactor);
+            var circle = new Circle(point,  scaleFactor);
+
+            RhinoApp.WriteLine($"diameter {circle.Diameter}");
+            RhinoApp.WriteLine($"world {worldscale}");
             var lines = new[]
             {
                 new Line(point, point + new Vector3d(scaleFactor, 0, 0)),

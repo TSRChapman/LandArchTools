@@ -64,24 +64,28 @@ namespace LandArchTools.Commands
         {
             Point3d point = e.CurrentPoint;
 
+            double worldscale;
+            e.Viewport.GetWorldToScreenScale(e.CurrentPoint, out worldscale);
+            var scaleFactor = (.05 / scale) / worldscale;
+
             // Draw circle at point
-            Circle circle = new Circle(point, 10 * scale);
-            e.Display.DrawCircle(circle, BlackColor, 2);
+            Circle circle = new Circle(point, scaleFactor);
+            e.Display.DrawCircle(circle, PinkColor, 4);
 
             // Draw extension lines
-            double lineLength = 100000 * scale;
+            double lineLength = circle.Diameter / 2;
 
             // Vertical lines
             e.Display.DrawLine(
                 point,
                 new Point3d(point.X, point.Y + lineLength, point.Z),
-                PinkColor,
+                BlueColor,
                 4
             );
             e.Display.DrawLine(
                 point,
                 new Point3d(point.X, point.Y - lineLength, point.Z),
-                PinkColor,
+                BlueColor,
                 4
             );
 

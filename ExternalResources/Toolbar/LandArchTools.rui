@@ -8,7 +8,7 @@
     </menu>
   </extend_rhino_menus>
   <tool_bar_groups>
-    <tool_bar_group guid="1067bebe-88d0-4b21-ab8b-9c9b8b4860e0" dock_bar_guid64="0ebf383b-256f-4b5a-9b11-ddf7c5ef9ef3" active_tool_bar_group="d8dc19cb-56d8-4f50-b015-76d6b2e6fb1f" single_file="False" hide_single_tab="False" point_floating="185,232">
+    <tool_bar_group guid="1067bebe-88d0-4b21-ab8b-9c9b8b4860e0" dock_bar_guid64="0ebf383b-256f-4b5a-9b11-ddf7c5ef9ef3" active_tool_bar_group="d8dc19cb-56d8-4f50-b015-76d6b2e6fb1f" single_file="False" hide_single_tab="False" point_floating="3,5">
       <text>
         <locale_1033>LandArchTools</locale_1033>
       </text>
@@ -18,7 +18,7 @@
         </text>
         <tool_bar_id>d8dc19cb-56d8-4f50-b015-76d6b2e6fb1f</tool_bar_id>
       </tool_bar_group_item>
-      <dock_bar_info dpi_scale="150" dock_bar="False" docking="True" horz="False" visible="True" floating="False" mru_float_style="8192" bar_id="59482" mru_width="51" point_pos="0,10" float_point="6,11" rect_mru_dock_pos="0,10,58,12" dock_location_u="59419" dock_location="top" float_size="880,62" />
+      <dock_bar_info dpi_scale="150" dock_bar="False" docking="True" horz="False" visible="True" floating="False" mru_float_style="8192" bar_id="59482" mru_width="23" point_pos="0,5" float_point="3,5" rect_mru_dock_pos="0,5,26,5" dock_location_u="59419" dock_location="top" float_size="880,62" />
     </tool_bar_group>
   </tool_bar_groups>
   <tool_bars>
@@ -59,17 +59,11 @@
       <tool_bar_item guid="7e3ac271-33ec-4c9d-95df-0f279a9766bf">
         <left_macro_id>89640668-abe2-45c1-9303-09a96c1466e8</left_macro_id>
       </tool_bar_item>
-      <tool_bar_item guid="9f05992f-75c6-4360-8a00-5412592b1130">
+      <tool_bar_item guid="491cf456-4c6a-4145-bd4d-b9b3135601a0">
         <left_macro_id>d1ca3149-4600-4d59-891a-116db286a114</left_macro_id>
       </tool_bar_item>
-      <tool_bar_item guid="b0604b6e-f847-447f-9448-ad2e691dc93a">
+      <tool_bar_item guid="75e30f1a-1fd5-4709-bb3b-f74d76f669c2">
         <left_macro_id>9403536b-930f-44c0-9a77-6c4f6122bc9e</left_macro_id>
-      </tool_bar_item>
-      <tool_bar_item guid="9d56baae-f374-4ee4-8917-a3170cadab27">
-        <left_macro_id>161b2a13-4700-4945-9dae-25c70928152b</left_macro_id>
-      </tool_bar_item>
-      <tool_bar_item guid="e6ca3755-0dee-41b6-a122-d647135d8db0">
-        <left_macro_id>9a1b07b4-c74a-4bf0-8534-b468a213d153</left_macro_id>
       </tool_bar_item>
       <tool_bar_item guid="6721b51f-7913-4c8c-98f8-e432ec106cd3">
         <left_macro_id>262cf1b5-9f4d-4363-8b21-c33e11c83f7b</left_macro_id>
@@ -184,18 +178,6 @@
         <locale_1033>Random Drop Block</locale_1033>
       </button_text>
       <script>! _RandomDrop</script>
-    </macro_item>
-    <macro_item guid="d1ca3149-4600-4d59-891a-116db286a114" bitmap_id="dd2745d9-c95b-4c6c-9b58-be8e9cb1be24">
-      <text>
-        <locale_1033>Macro 04</locale_1033>
-      </text>
-      <tooltip>
-        <locale_1033>Drop objects to surface/mesh in Z</locale_1033>
-      </tooltip>
-      <button_text>
-        <locale_1033>Drop objects to surface/mesh in Z</locale_1033>
-      </button_text>
-      <script>! _DropBlockToSurface</script>
     </macro_item>
     <macro_item guid="161b2a13-4700-4945-9dae-25c70928152b" bitmap_id="bd3a0457-e280-44b4-95ec-68bf6d152c4f">
       <text>
@@ -424,18 +406,6 @@
         <locale_1033>Tree Soil Volume Requirements</locale_1033>
       </button_text>
       <script>! _TreeMassing</script>
-    </macro_item>
-    <macro_item guid="9403536b-930f-44c0-9a77-6c4f6122bc9e" bitmap_id="8ada728b-3369-4944-abb1-ffbd8ad8bc45">
-      <text>
-        <locale_1033>Macro 25</locale_1033>
-      </text>
-      <tooltip>
-        <locale_1033>Project Curves to Tin</locale_1033>
-      </tooltip>
-      <button_text>
-        <locale_1033>Project Curves to Tin</locale_1033>
-      </button_text>
-      <script>! _ProjectCurvesToTin</script>
     </macro_item>
     <macro_item guid="ea45e800-7e0d-4457-9eec-b96eafd95d9d" bitmap_id="6e1f851c-0464-4d81-840c-b083b147a899">
       <text>
@@ -680,6 +650,30 @@
         <locale_1033>Import locate and scale NearMaps jpg</locale_1033>
       </button_text>
       <script>! _ImportJpgWorldFile</script>
+    </macro_item>
+    <macro_item guid="d1ca3149-4600-4d59-891a-116db286a114" bitmap_id="dd2745d9-c95b-4c6c-9b58-be8e9cb1be24">
+      <text>
+        <locale_1033>Macro 04</locale_1033>
+      </text>
+      <tooltip>
+        <locale_1033>Drop objects to surface/mesh in Z</locale_1033>
+      </tooltip>
+      <button_text>
+        <locale_1033>Drop objects to surface/mesh in Z</locale_1033>
+      </button_text>
+      <script>! _DropToSurface</script>
+    </macro_item>
+    <macro_item guid="9403536b-930f-44c0-9a77-6c4f6122bc9e" bitmap_id="8ada728b-3369-4944-abb1-ffbd8ad8bc45">
+      <text>
+        <locale_1033>Macro 25</locale_1033>
+      </text>
+      <tooltip>
+        <locale_1033>Project Curves to Tin</locale_1033>
+      </tooltip>
+      <button_text>
+        <locale_1033>Project Curves to Tin</locale_1033>
+      </button_text>
+      <script>! _ProjectCurvesToSurface</script>
     </macro_item>
   </macros>
   <icons>

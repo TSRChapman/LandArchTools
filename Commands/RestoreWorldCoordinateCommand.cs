@@ -24,11 +24,11 @@ namespace LandArchTools.Commands
         {
             try
             {
-                doc.Views.RedrawEnabled = false;
+                
 
                 // Find origin text by name
-                var originText = FindObjectByName(doc, "_ORIGIN_TEXT_");
-                if (originText == null)
+                RhinoObject originText;
+                if (!FindObjectByName(doc, "_ORIGIN_TEXT_", out originText))
                 {
                     RhinoApp.WriteLine("Origin text not found. Has TruncateWorldCoordinate been run?");
                     return Result.Failure;
@@ -42,8 +42,8 @@ namespace LandArchTools.Commands
                 }
 
                 // Find origin point and create vector
-                var originPoint = FindObjectByName(doc, "_ORIGIN_POINT_");
-                if (originPoint == null)
+                RhinoObject originPoint;
+                if (!FindObjectByName(doc, "_ORIGIN_POINT_", out originPoint))
                 {
                     RhinoApp.WriteLine("Origin point not found");
                     return Result.Failure;
@@ -83,8 +83,7 @@ namespace LandArchTools.Commands
                     doc.Layers.Purge(originLayer.Index, true);
                 }
 
-                doc.Views.RedrawEnabled = true;
-                doc.Views.Redraw();
+                
 
                 return Result.Success;
             }
@@ -96,10 +95,17 @@ namespace LandArchTools.Commands
             }
         }
 
-        private RhinoObject FindObjectByName(RhinoDoc doc, string name)
+        private bool FindObjectByName(RhinoDoc doc, string name, out RhinoObject result)
         {
             var objects = doc.Objects.FindByUserString("type", "_ORIGIN_POINT_", true);
-            return objects[0];
+            RhinoApp.WriteLine($"Failed to execute: {objects.Length}");
+            if (objects.Length == 0)
+            {
+                result = null;
+                return false;
+            }
+            result = objects[0];
+            return true;
         }
 
         private bool TryParseCoordinates(ObjectAttributes textDot, out double easting, out double northing)
