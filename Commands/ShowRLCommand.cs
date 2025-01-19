@@ -60,12 +60,11 @@ namespace LandArchTools.Commands
         {
             double worldscale;
             e.Viewport.GetWorldToScreenScale(e.CurrentPoint, out worldscale);
-            var scaleFactor = (.05 / scale) / worldscale ;
+            
+            var scaleFactor = 50 / worldscale;
             var point = e.CurrentPoint;
             var circle = new Circle(point,  scaleFactor);
 
-            RhinoApp.WriteLine($"diameter {circle.Diameter}");
-            RhinoApp.WriteLine($"world {worldscale}");
             var lines = new[]
             {
                 new Line(point, point + new Vector3d(scaleFactor, 0, 0)),

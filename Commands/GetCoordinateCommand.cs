@@ -66,7 +66,7 @@ namespace LandArchTools.Commands
 
             double worldscale;
             e.Viewport.GetWorldToScreenScale(e.CurrentPoint, out worldscale);
-            var scaleFactor = (.05 / scale) / worldscale;
+            var scaleFactor = 50 / worldscale;
 
             // Draw circle at point
             Circle circle = new Circle(point, scaleFactor);
